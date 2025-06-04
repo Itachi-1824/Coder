@@ -1,0 +1,177 @@
+{
+  "name": "Coder - AI Web IDE",
+  "short_name": "Coder",
+  "description": "The most advanced mobile-first AI-powered web IDE in 2025. Code anywhere with cutting-edge touch interactions.",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["developer", "productivity", "utilities"],
+  "screenshots": [
+    {
+      "src": "/screenshots/mobile-chat.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "AI Chat Interface"
+    },
+    {
+      "src": "/screenshots/mobile-files.png", 
+      "sizes": "390x844",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "File Explorer"
+    },
+    {
+      "src": "/screenshots/desktop-overview.png",
+      "sizes": "1920x1080", 
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Desktop Overview"
+    }
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-96x96.png", 
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-128x128.png",
+      "sizes": "128x128", 
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png", 
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-384x384.png", 
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New Chat",
+      "short_name": "Chat", 
+      "description": "Start a new AI conversation",
+      "url": "/?shortcut=chat",
+      "icons": [
+        {
+          "src": "/icons/shortcut-chat.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "File Explorer",
+      "short_name": "Files",
+      "description": "Browse project files",
+      "url": "/?shortcut=files", 
+      "icons": [
+        {
+          "src": "/icons/shortcut-files.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Upload Images",
+      "short_name": "Images",
+      "description": "Upload and analyze images",
+      "url": "/?shortcut=images",
+      "icons": [
+        {
+          "src": "/icons/shortcut-images.png", 
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  },
+  "handle_links": "preferred",
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "share_target": {
+    "action": "/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text", 
+      "url": "url",
+      "files": [
+        {
+          "name": "images",
+          "accept": ["image/jpeg", "image/png", "image/webp", "image/gif"]
+        },
+        {
+          "name": "files",
+          "accept": [".js", ".ts", ".jsx", ".tsx", ".py", ".html", ".css", ".json", ".md"]
+        }
+      ]
+    }
+  },
+  "file_handlers": [
+    {
+      "action": "/file-handler",
+      "accept": {
+        "text/javascript": [".js"],
+        "text/typescript": [".ts"], 
+        "text/html": [".html"],
+        "text/css": [".css"],
+        "application/json": [".json"],
+        "text/markdown": [".md"],
+        "text/python": [".py"]
+      }
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+coder",
+      "url": "/protocol-handler?url=%s"
+    }
+  ],
+  "capture_links": "existing-client-navigate"
+}
