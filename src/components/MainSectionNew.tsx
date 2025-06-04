@@ -175,7 +175,7 @@ Could you provide more specific details about what you're looking for? The more 
         }];
       });
 
-    } catch (error) {
+    } catch {
       setMessages(prev => [...prev, {
         id: `${Date.now()}-error`,
         type: 'ai',

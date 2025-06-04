@@ -58,14 +58,14 @@ export default function Home() {
   };
 
   // Set up swipe gestures for main content area
-  const swipeRef = useSwipeGestures<HTMLDivElement>({
+  useSwipeGestures<HTMLDivElement>({
     onSwipeLeft: () => navigateToView('next'),
     onSwipeRight: () => navigateToView('prev'),
     threshold: 100
   });
 
   // Set up pull-to-refresh for main content
-  const refreshRef = usePullToRefresh<HTMLDivElement>(handleRefresh, 80);
+  usePullToRefresh<HTMLDivElement>(handleRefresh, 80);
 
   const handleFileSelect = (filePath: string) => {
     setSelectedFile(filePath);
