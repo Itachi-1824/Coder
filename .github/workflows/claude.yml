@@ -17,9 +17,9 @@ jobs:
       (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      pull-requests: write
-      issues: write
+      contents: read
+      pull-requests: read
+      issues: read
       id-token: write
       actions: read
     
@@ -27,8 +27,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
       
       - name: Prepare Environment
         run: |
@@ -59,57 +58,36 @@ jobs:
       
       - name: Start Claude Code Router
         run: |
-          echo "Config file contents:"
-          cat $HOME/.claude-code-router/config.json
-          echo ""
-          echo "Starting router..."
-          ~/.bun/bin/bunx @musistudio/claude-code-router@latest start > /tmp/router.log 2>&1 &
+          # Start the router in the background
+          nohup ~/.bun/bin/bunx @musistudio/claude-code-router@latest start > /tmp/router.log 2>&1 &
           ROUTER_PID=$!
-          echo "Router PID: $ROUTER_PID"
           
-          sleep 5
-          echo "Router logs after 5 seconds:"
-          cat /tmp/router.log
-          echo ""
-          
-          echo "Waiting for router to become ready..."
+          # Wait for router to be ready (check if port 3456 is listening)
+          echo "Waiting for router to start..."
           for i in {1..30}; do
-            if curl -s http://localhost:3456/health > /dev/null 2>&1; then
-              echo "✅ Router health check passed!"
+            if curl -s http://localhost:3456/health > /dev/null 2>&1 || nc -z localhost 3456 2>/dev/null; then
+              echo "Router is ready!"
               break
             fi
             if [ $i -eq 30 ]; then
-              echo "❌ Router failed health check after 30 seconds"
-              echo "Final router logs:"
+              echo "Router failed to start within 30 seconds"
+              echo "Router logs:"
               cat /tmp/router.log
-              echo ""
-              echo "Router process status:"
-              ps aux | grep -i router || echo "No router process found"
-              echo ""
-              echo "Port 3456 status:"
-              netstat -tlnp | grep 3456 || echo "Port 3456 not listening"
               exit 1
             fi
+            echo "Attempt $i/30: Router not ready yet, waiting..."
             sleep 1
           done
           
+          # Verify router is still running
           if ! kill -0 $ROUTER_PID 2>/dev/null; then
-            echo "❌ Router process died"
-            echo "Final router logs:"
+            echo "Router process died"
+            echo "Router logs:"
             cat /tmp/router.log
             exit 1
           fi
           
-          echo "✅ Router is running with PID: $ROUTER_PID"
-          echo ""
-          echo "Testing router with sample request..."
-          TEST_RESPONSE=$(curl -s -w "\nHTTP_CODE:%{http_code}" http://localhost:3456/v1/messages \
-            -H "Content-Type: application/json" \
-            -H "x-api-key: test" \
-            -d '{"model":"deepseek","messages":[{"role":"user","content":"Hi"}],"max_tokens":10}' 2>&1)
-          echo "Test response: $TEST_RESPONSE"
-          echo ""
-          echo "Router is ready for Claude Code"
+          echo "Router is running with PID: $ROUTER_PID"
         shell: bash
       
       - name: Run Claude Code
